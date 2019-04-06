@@ -67,7 +67,7 @@ def get_images_for_test():
     # print('Find {} images'.format(len(files)))
     return files
 
-def resize_image(im, max_side_len=512):
+def resize_image(im, max_side_len=2400):
     '''
     resize image to a size multiple of 32 which is required zby the network
     :param im: the resized image
@@ -100,7 +100,7 @@ def resize_image(im, max_side_len=512):
 
     return im, (ratio_h, ratio_w)
 
-def detect(score_map, geo_map, timer, score_map_thresh=1e-5, box_thresh=1e-8, nms_thres=0.1):
+def detect(score_map, geo_map, timer, score_map_thresh=0.5, box_thresh=0.1, nms_thres=0.2):
     '''
     restore text boxes from score map and geo map
     :param score_map:
