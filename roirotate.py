@@ -62,8 +62,8 @@ def rotate(img, rectangle, feature, ht = 8):
         print(M_inv)
 
         grid = F.affine_grid(torch.from_numpy(M_inv[None]), torch.Size((1, feature.shape[1], ht, int(wt) + 1)))
-        rotated_feature = F.grid_sample(feature, grid.float().cuda())
         #grid = F.affine_grid(torch.from_numpy(M_inv[None]), torch.Size((1, feature.shape[1], int(h), int(w))))  #before resized to ht = 8
+        rotated_feature = F.grid_sample(feature, grid.float().cuda())
         #crop_img = F.grid_sample(img, grid.float().cuda())
         #resized = F.grid_sample(torch.unsqueeze(resize_img, 0), grid.float().cuda())
         #vis.image(crop_img[0])
