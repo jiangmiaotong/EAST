@@ -37,6 +37,7 @@ def rotate(img, rectangle, feature, ht = 8):
     #vis.image(resize_img)
     vis.heatmap(feature[0][0])
 
+    feature_list = []
     rectangle = rectangle.numpy()
     w_max = 0
     l = [0, 0, 1]
@@ -62,12 +63,27 @@ def rotate(img, rectangle, feature, ht = 8):
         print(M_inv)
 
         grid = F.affine_grid(torch.from_numpy(M_inv[None]), torch.Size((1, feature.shape[1], ht, int(wt) + 1)))
-        rotated_feature = F.grid_sample(feature, grid.float().cuda())
         #grid = F.affine_grid(torch.from_numpy(M_inv[None]), torch.Size((1, feature.shape[1], int(h), int(w))))  #before resized to ht = 8
+        rotated_feature = F.grid_sample(feature, grid.float().cuda())
         #crop_img = F.grid_sample(img, grid.float().cuda())
         #resized = F.grid_sample(torch.unsqueeze(resize_img, 0), grid.float().cuda())
         #vis.image(crop_img[0])
         #vis.image(resized[0])
         vis.heatmap(rotated_feature[0][0])
+        feature_list.append(rotated_feature)
+
     w_max = int(w_max) + 1
-    return rotated_feature
+    feature_padded = []
+    for f in feature_list:
+        w_f = f.shape[3]
+        w_pad = w_max - w_f
+        C = f.shape[1]
+        pad = torch.zeros(1, C, 8, w_pad)
+        f = f.detach().cpu().numpy()
+        feature = torch.tensor(np.concatenate((f, pad.numpy()), axis=3))
+        vis.heatmap(feature[0][0])
+        feature_padded.append(feature)
+
+    rec_feature = torch.stack(feature_padded, 0)
+    return rec_feature
+
