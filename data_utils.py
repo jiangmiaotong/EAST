@@ -792,7 +792,7 @@ def image_label(txt_root,
             geo_map = np.zeros((input_size, input_size, geo_map_channels), dtype=np.float32)
             training_mask = np.ones((input_size, input_size), dtype=np.uint8)
         else:
-            #im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=False)
+            im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=False)
             assert len(text_polys) > 0, 'crop area should have some text_polys'
             #if len(text_polys) == 0: #for some reason , gt contain no polys, have to return black
             #    score_map = np.zeros((input_size, input_size), dtype=np.uint8)
